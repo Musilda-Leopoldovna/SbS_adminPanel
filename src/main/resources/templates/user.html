@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      lang="ru">
+
+<head>
+    <title>Данные пользователя</title>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+</head>
+
+<body>
+    <form class="logout_button" th:action="@{/logout}" method="post">
+        <button th:type="submit" sec:authorize="isAuthenticated()">Выйти</button>
+    </form>
+    <div class="general_view">
+        <form class="welcome" th:object="${user}">
+            <p th:text="'Привет, ' + *{firstName} + '!'"></p>
+        </form>
+        <form class="title">
+            <h3>Данные пользователя</h3>
+        </form>
+        <table>
+            <tr >
+                <th title="Идентификатор в БД">ID</th>
+                <th title="Имя">firstName</th>
+                <th title="Фамилия">lastName</th>
+                <th title="Возраст">age</th>
+                <th title="Электронная почта">email</th>
+            </tr>
+            <tbody>
+            <tr th:object="${user}">
+                <td th:text="*{ID}"></td>
+                <td th:text="*{firstName}"></td>
+                <td th:text="*{lastName}"></td>
+                <td th:text="*{age}"></td>
+                <td th:text="*{email}"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+</html>

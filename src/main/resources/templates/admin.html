@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="http://www.thymeleaf.org"
+      xmlns:sec="https://www.thymeleaf.org/thymeleaf-extras-springsecurity5"
+      lang="ru">
+
+    <head>
+        <title>Панель администратора</title>
+        <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" th:href="@{/css/style.css}"/>
+    </head>
+
+    <body>
+    <form class="logout_button" th:action="@{/logout}" method="post">
+        <button th:type="submit" sec:authorize="isAuthenticated()">Выйти</button>
+    </form>
+    <div class="general_view">
+        <form class="user_button" th:action="@{/user}" method="get">
+            <button type="submit">Посмотреть свои данные</button>
+        </form>
+        <form class="title">
+            <h3>Страница редактирования списка пользователей</h3>
+        </form>
+        <table>
+            <tr>
+                <th title="Номер в списке">ID</th>
+                <th title="Имя">firstName</th>
+                <th title="Фамилия">lastName</th>
+                <th title="Возраст">age</th>
+                <th title="Электронная почта">email</th>
+                <th>updating</th>
+            </tr>
+            <tbody>
+            <tr th:object="${user}" th:each="user : ${userList}">
+                <td th:text="*{ID}"></td>
+                <td th:text="*{firstName}"></td>
+                <td th:text="*{lastName}"></td>
+                <td th:text="*{age}"></td>
+                <td th:text="*{email}"></td>
+                <td>
+                    <form class="inline_form" th:action="@{/admin}" method="get">
+                        <input type="hidden" name="editId" th:value="${user.ID}" />
+                        <input class="update_button" type="submit" value="upd" title="редактировать" />
+                    </form>
+                    <form class="inline_form" th:action="@{/admin/delete}" method="post">
+                        <input type="hidden" name="deleteId" th:value="${user.ID}" />
+                        <input class="delete_button" type="submit" value="del" title="удалить" />
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <form class="input_form" th:action="@{/admin/addUser}" method="post" th:object="${user}">
+            <input type="text" size="20" maxlength="20" name="firstName" placeholder="Имя" th:value="${user.firstName}" />
+            <input type="text" size="40" maxlength="40" name="lastName" placeholder="Фамилия" th:value="${user.lastName}" />
+            <input type="text" size="5" maxlength="2" name="age" placeholder="Возраст" th:value="${user.age != null ? user.age : ''}" />
+            <input type="text" size="40" maxlength="40" name="email" placeholder="Эл.адрес" th:value="${user.email}" />
+            <button class="add_button" type="submit">добавить пользователя</button>
+        </form>
+        <form class="edit_form active" th:if="${editUser != null}" th:action="@{/admin/update}" method="post">
+            <h5>Изменить данные пользователя</h5>
+            <input type="hidden" name="ID" th:object="${editUser}" th:value="*{ID}" />
+            <input type="text" size="20" maxlength="20" name="firstName" placeholder="Имя" th:value="${editUser.firstName}" />
+            <input type="text" size="40" maxlength="40" name="lastName" placeholder="Фамилия" th:value="${editUser.lastName}" />
+            <input type="text" size="5" maxlength="2" name="age" placeholder="Возраст" th:value="${editUser.age != null ? editUser.age : ''}" />
+            <input type="text" size="40" maxlength="40" name="email" placeholder="Эл.адрес" th:value="${editUser.email}" />
+            <button type="submit">Сохранить</button>
+        </form>
+        <form><a href="#"></a>
+            <button class="top_button" type="submit">Наверх</button>
+        </form>
+    </div>
+    </body>
+</html>

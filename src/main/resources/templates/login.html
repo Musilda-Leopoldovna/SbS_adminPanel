@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:th="https://www.thymeleaf.org"
+      lang="ru">
+
+<head>
+    <title>Форма авторизации</title>
+    <meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" type="text/css" th:href="@{/css/login.css}"/>
+</head>
+<body>
+<h3>Пожалуйста, авторизуйтесь</h3>
+<form class="login" th:action="@{/login}" method="post">
+    <div class='error' th:if="${param.error}">
+        Авторизация не пройдена, проверьте имя пользователя и пароль.
+    </div>
+    <div class="card-form">
+        <div class="login-input">
+            <fieldset class="input_fieldset">
+                <legend class="input_legend">Электронная почта или Имя пользователя</legend>
+                <input type="text" size="40" maxlength="40" name="username" id="username"
+                       aria-label="Электронная почта или Имя пользователя" placeholder="Имя пользователя"/>
+            </fieldset>
+        </div>
+        <div class="password-input">
+            <fieldset class="input_fieldset">
+                <legend class="input_legend">Пароль</legend>
+                <input type="password" size="40" minlength="5" maxlength="40" name="password"
+                       id="password" aria-label="Пароль" placeholder="Пароль"/>
+            </fieldset>
+        </div>
+        <button class="button-submit" type="submit">
+            <span>Войти</span>
+        </button>
+    </div>
+</form>
+</body>
+</html>

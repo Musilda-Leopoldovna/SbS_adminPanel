@@ -1,0 +1,52 @@
+body {
+    font-family: "Georgia",cursive;
+}
+h3 {
+    text-align: center;
+    margin-top: min(50px);
+    color: #3366CC;
+}
+h4 {
+    text-align: right;
+    margin-top: 30px;
+    margin-right: 30px;
+    color: #3366CC;
+}
+.login {
+    width: 540px;
+    box-sizing: border-box;
+    margin-left: 30%;
+    border-radius: 8px;
+
+    .input_fieldset {
+        border: 2px ridge #c0d6e4;
+        .input_legend {
+            font-style: italic;
+            font-size: small;
+            color: #000080;
+        }
+    }
+    .error {
+        text-align: center;
+        color: red;
+    }
+    .card-form {
+        .login-input {
+            margin-top: 24px;
+        }
+
+        .password-input {
+            margin-top: 24px;
+        }
+
+        .button-submit {
+            width: 30%;
+            height: 25px;
+            margin-top: 30px;
+            background-color: #3366CC;
+            border: 2px ridge #c0d6e4;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+    }
+}

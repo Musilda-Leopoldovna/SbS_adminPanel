@@ -1,0 +1,113 @@
+body {
+    font-family: "Georgia",cursive;
+}
+.welcome {
+    text-align: left;
+    color: #3366CC;
+}
+.general_view {
+    margin-top: 30px;
+    margin-inline: 20%;
+    width: 60%;
+}
+.title {
+    text-align: center;
+    color: #3366CC;
+}
+h5 {
+    font-style: normal;
+    color: #3366CC;
+}
+table {
+    width: 100%;
+    border-collapse: collapse;
+    text-overflow: ellipsis
+}
+th {
+    font-weight: bold;
+    padding: 5px;
+    background-color: #3366CC;
+    border: 4px double #c0d6e4;
+    color: #dae2e8;
+}
+th:nth-child(1) {
+    width: 15%;
+}
+th:nth-child(2) {
+    width: 20%;
+}
+th:nth-child(3) {
+    width: 20%;
+}
+th:nth-child(4) {
+    width: 10%;
+}
+th:nth-child(5) {
+    width: 25%;
+}
+th:nth-child(6) {
+    width: 10%;
+    max-width: 50px;
+}
+td {
+    border: 2px ridge #c0d6e4;
+    padding: 5px;
+    width: fit-content;
+    text-align: center;
+}
+.inline_form {
+    display: inline-block;
+    margin-right: 2px;
+}
+.update_button {
+    border: 2px ridge #c0d6e4;
+    border-radius: 5px;
+    font-weight: bolder;
+    color: #718091;
+    background-color: #f6e16d;
+}
+.delete_button {
+    border: 2px ridge #c0d6e4;
+    border-radius: 5px;
+    font-weight: bolder;
+    color: #718091;
+    background-color: #fb614c;
+}
+.input_form {
+    text-align: left;
+    margin-top: 30px;
+}
+.add_button {
+    border: 2px ridge #c0d6e4;
+    border-radius: 3px;
+    padding: 5px 15px;
+    background: #3366CC;
+    cursor: pointer;
+    color: white;
+}
+.edit_form {
+    display: none;
+}
+.active {
+    display: block;
+}
+.logout_button {
+    position: absolute;
+    top: 20px;
+    right: 30px;
+}
+.user_button {
+    margin-top: 30px;
+}
+.top_button {
+    border: 2px ridge #c0d6e4;
+    margin-top: 30px;
+    border-radius: 3px;
+    position: sticky;
+    background-color: #3366CC;
+}
+.back {
+    margin-top: 30px;
+    text-align: center;
+    color: navy;
+}
