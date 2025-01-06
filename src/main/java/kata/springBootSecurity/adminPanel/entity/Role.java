@@ -1,6 +1,8 @@
-package ru.kata.spring.boot_security.entity;
+package kata.springBootSecurity.adminPanel.entity;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.ManyToMany;
 
@@ -12,17 +14,22 @@ import java.util.Collection;
 public class Role implements GrantedAuthority {
 
     @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
-    @ManyToMany(mappedBy = "roles")
-    private Collection<User> users;
+//    @ManyToMany(mappedBy = "roles")
+//    private Collection<User> users;
 
-    public Role() {
-    }
+//    public Role() {
+//    }
 
     @Override
     public String getAuthority() {
         return name;
+    }
+
+    public Long getId() {
+        return id;
     }
 }

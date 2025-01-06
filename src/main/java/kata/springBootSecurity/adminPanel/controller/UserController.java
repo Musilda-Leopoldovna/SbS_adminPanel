@@ -1,10 +1,10 @@
-package ru.kata.spring.boot_security.controller;
+package kata.springBootSecurity.adminPanel.controller;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import ru.kata.spring.boot_security.entity.User;
-import ru.kata.spring.boot_security.service.UserService;
+import kata.springBootSecurity.adminPanel.entity.User;
+import kata.springBootSecurity.adminPanel.service.UserService;
 
 import java.security.Principal;
 
@@ -12,6 +12,7 @@ import java.security.Principal;
 public class UserController {
 
     private final UserService service;
+
     public UserController(UserService service) {
         this.service = service;
     }
@@ -21,5 +22,13 @@ public class UserController {
         User user = service.getUserByUsername(principal.getName());
         model.addAttribute("user", user);
         return "user";
+    }
+
+    @GetMapping("/")
+    public String rootPage(Principal principal) {
+        if(principal != null) {
+            return "redirect:/user";
+        }
+        return "redirect:/login";
     }
 }

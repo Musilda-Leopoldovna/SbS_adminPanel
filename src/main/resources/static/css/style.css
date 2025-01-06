@@ -1,16 +1,51 @@
 body {
     font-family: "Georgia",cursive;
 }
+.top_navbar {
+    display: flex;
+    height: fit-content;
+    justify-content: space-between;
+    align-items: center;
+    background-color: #3366CC;
+    color: #dae2e8;
+    border: 4px double #c0d6e4;
+    border-radius: 5px;
+}
 .welcome {
-    text-align: left;
-    color: #3366CC;
+    margin-left: 30px;
+    font-weight: bold;
+}
+.logout-form {
+    margin: 0;
+}
+.logout_button {
+    padding: 5px 10px;
+    margin-right: 30px;
+    cursor: pointer;
+    background-color: #fb614c;
+    color: darkblue;
+    border: 2px ridge darkblue;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+.logout_button:hover {
+    background-color: darkred;
+}
+.user-table {
+    width: 85%;
+    margin-inline: 15px;
 }
 .general_view {
-    margin-top: 30px;
-    margin-inline: 20%;
-    width: 60%;
+    margin-top: 10px;
+    display: flex;
+    width: 95%;
 }
-.title {
+h2 {
+    padding: 20px;
+    text-align: center;
+    color: navy;
+}
+h3 {
     text-align: center;
     color: #3366CC;
 }
@@ -25,13 +60,14 @@ table {
 }
 th {
     font-weight: bold;
+    text-align: center;
     padding: 5px;
     background-color: #3366CC;
     border: 4px double #c0d6e4;
     color: #dae2e8;
 }
 th:nth-child(1) {
-    width: 15%;
+    width: 10%;
 }
 th:nth-child(2) {
     width: 20%;
@@ -40,13 +76,10 @@ th:nth-child(3) {
     width: 20%;
 }
 th:nth-child(4) {
-    width: 10%;
+    width: 35%;
 }
 th:nth-child(5) {
-    width: 25%;
-}
-th:nth-child(6) {
-    width: 10%;
+    width: 15%;
     max-width: 50px;
 }
 td {
@@ -55,9 +88,9 @@ td {
     width: fit-content;
     text-align: center;
 }
-.inline_form {
+.button-group {
     display: inline-block;
-    margin-right: 2px;
+    gap: 20%;
 }
 .update_button {
     border: 2px ridge #c0d6e4;
@@ -73,11 +106,8 @@ td {
     color: #718091;
     background-color: #fb614c;
 }
-.input_form {
-    text-align: left;
-    margin-top: 30px;
-}
 .add_button {
+    align-items: center;
     border: 2px ridge #c0d6e4;
     border-radius: 3px;
     padding: 5px 15px;
@@ -85,21 +115,8 @@ td {
     cursor: pointer;
     color: white;
 }
-.edit_form {
-    display: none;
-}
-.active {
-    display: block;
-}
-.logout_button {
-    position: absolute;
-    top: 20px;
-    right: 30px;
-}
 .user_button {
-    margin-top: 30px;
-}
-.top_button {
+    cursor: pointer;
     border: 2px ridge #c0d6e4;
     margin-top: 30px;
     border-radius: 3px;
@@ -107,6 +124,7 @@ td {
     background-color: #3366CC;
 }
 .back {
+    align-items: center;
     margin-top: 30px;
     text-align: center;
     color: navy;

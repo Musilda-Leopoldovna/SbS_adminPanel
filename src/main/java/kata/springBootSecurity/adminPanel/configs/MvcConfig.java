@@ -1,4 +1,4 @@
-package ru.kata.spring.boot_security.configs;
+package kata.springBootSecurity.adminPanel.configs;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;

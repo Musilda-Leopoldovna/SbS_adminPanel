@@ -1,6 +1,6 @@
-package ru.kata.spring.boot_security.repository;
+package kata.springBootSecurity.adminPanel.repository;
 
-import ru.kata.spring.boot_security.entity.User;
+import kata.springBootSecurity.adminPanel.entity.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
