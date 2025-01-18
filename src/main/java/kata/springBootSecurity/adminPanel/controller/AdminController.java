@@ -21,18 +21,22 @@ public class AdminController {
     @GetMapping("/admin")
     public String mainPage(@ModelAttribute User user, Model model) {
         model.addAttribute("userList", service.getListOfUsers());
+        model.addAttribute("roles", service.getListOfRoles());
         return "admin";
     }
 
     @PostMapping("/addUser")
-    public String addRow(@ModelAttribute User user) {
-        service.addNewUser(user);
+    public String addRow(@ModelAttribute User user,
+                         @RequestParam("roleIds") Long roleIds) {
+        service.addNewUser(user, roleIds);
         return "redirect:/admin";
     }
 
     @PostMapping("/update")
-    public String updateRow(@ModelAttribute User user){
-        service.changeUser(user);
+    public String updateRow(@ModelAttribute User user,
+                            @RequestParam(value = "updId") Long updId,
+                            @RequestParam("updRole") Long updRole){
+        service.changeUser(user, updId, updRole);
         return "redirect:/admin";
     }
 

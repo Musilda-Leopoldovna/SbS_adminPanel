@@ -58,8 +58,7 @@
                     <td th:text="*{ID}"></td>
                     <td th:text="*{firstName}"></td>
                     <td th:text="*{email}"></td>
-                    <td th:text="*{role}">
-                    </td>
+                    <td th:text="*{#strings.listJoin(roles, ' ')}">
                 </tr>
             </tbody>
         </table>

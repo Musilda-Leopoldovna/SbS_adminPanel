@@ -1,11 +1,8 @@
 package kata.springBootSecurity.adminPanel.service;
 
-import java.util.HashSet;
+import java.util.Collection;
 import java.util.List;
-import java.util.Set;
 
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,49 +30,52 @@ public class UserService {
         return userRepository.findAll();
     }
 
-    public void addNewUser(User user) {
-        user.setUsername();
-        String password = user.getPassword();
-        if (password != null && !password.isEmpty()) {
-            user.setPassword(passwordEncoder.encode(password));
-        }
-//        List<Role> allRoles = user.getRoles().stream()
-//                        .map(role -> roleRepository.findByName(role.getAuthority()))
-//                                .collect(Collectors.toList());
-//        user.setRoles(allRoles);
-
-        userRepository.save(user);
+    @Transactional(readOnly = true)
+    public Collection<Role> getListOfRoles() {
+        return roleRepository.findAll();
     }
 
-    public void changeUser(User user) {
-        User updUser = userRepository.findById(user.getID())
-                .orElseThrow(() -> new IllegalArgumentException("При попытке изменить данные пользователь не найден"));
-        String newPassword = user.getPassword();
-        if (newPassword != null && !newPassword.isEmpty()) {
-            updUser.setPassword(passwordEncoder.encode(newPassword));
-        }
-        updUser.setFirstName(user.getFirstName());
-        updUser.setEmail(user.getEmail());
-        userRepository.save(updUser);
+    @Transactional(readOnly = true)
+    public User getUserByUsername(String username) {
+        return userRepository.findByUsername(username);
     }
 
     public void removeUserByID(Long ID) {
         userRepository.deleteById(ID);
     }
 
-//    public User getUserByID(Long userId) {
-//        return userRepository.findById(userId).orElse(new User());
-//    }
-
-    public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+    public void addNewUser(User user, Long roleIds) {
+        user.setUsername();
+        String password = user.getPassword();
+        if (password != null && !password.isEmpty()) {
+            user.setPassword(passwordEncoder.encode(password));
+        }
+        Role role = roleRepository.findById(roleIds).orElseThrow(() -> new IllegalArgumentException("Роль не найдена"));
+        user.setRoles(role);
+        userRepository.save(user);
     }
 
-    public Set<Role> getRolesByIds(List<Long> ids) {
-        return new HashSet<>(roleRepository.findAllById(ids));
-    }
-    public List<String> getAllRoles(Authentication authentication) {
-        Set<String> roles = AuthorityUtils.authorityListToSet(authentication.getAuthorities());
-        return roles.stream().toList();
+    public void changeUser(User user, Long updId, Long updRole) {
+        User updUser = userRepository.findById(updId)
+                .orElseThrow(() -> new IllegalArgumentException("При попытке изменить данные пользователь не найден"));
+        String newPassword = user.getPassword();
+        if (newPassword != null && !newPassword.isEmpty()) {
+            updUser.setPassword(passwordEncoder.encode(newPassword));
+        }
+        String newFirstName = user.getFirstName();
+        String newEmail = user.getEmail();
+        if (newFirstName != null && !newFirstName.isEmpty()) {
+            updUser.setFirstName(newFirstName);
+        }
+        if (newEmail != null && !newEmail.isEmpty()) {
+            updUser.setEmail(newEmail);
+        }
+        Role addRole = roleRepository.findById(updRole).orElseThrow(() -> new IllegalArgumentException("Роль не найдена"));
+        if (!updUser.getAuthorities().contains(addRole) && addRole != null) {
+            updUser.setRoles(addRole);
+        } else {
+            updUser.getAuthorities().removeIf(role -> role.equals(addRole));
+        }
+        userRepository.save(updUser);
     }
 }

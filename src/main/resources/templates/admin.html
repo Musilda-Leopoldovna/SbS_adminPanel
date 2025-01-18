@@ -74,11 +74,13 @@
                             <td th:text="*{ID}"></td>
                             <td th:text="*{firstName}"></td>
                             <td th:text="*{email}"></td>
-                            <td th:text="*{role}"></td>
+                            <td th:text="*{#strings.listJoin(roles, ' ')}">
+                            </td>
                             <td>
-                                <div class="button-group">
+                                <div class="button-group" th:object="${user}">
                                     <button type="button" class="update_button" data-bs-toggle="modal"
                                             th:data-id="*{ID}"  th:data-firstname="*{firstName}" th:data-email="*{email}"
+                                            th:data-roles="*{#strings.listJoin(roles, ' ')}"
                                             data-bs-target="#editForm" title="редактировать">upd</button>
                                     <button type="button" class="delete_button" data-bs-toggle="modal"
                                             th:data-id="*{ID}" th:data-firstname="*{firstName}" th:data-email="*{email}"
@@ -98,7 +100,7 @@
                                 </div>
                                 <div class="modal-body">
                                     <form th:action="@{/update}" method="post" th:object="${user}">
-                                        <input type="hidden" id="userId" th:field="*{ID}">
+                                        <input type="hidden" id="userID" th:name="updId">
                                         <div class="mb-3">
                                             <label for="ID" class="col-form-label">ID</label>
                                             <input type="text" class="form-control" id="ID" readonly>
@@ -120,23 +122,16 @@
                                                    placeholder="Новый пароль" th:field="*{password}">
                                         </div>
                                         <div class="form-group">
-                                            <label for="updRoles">Права:</label>
-                                            <select class="form-control" id="updRoles">
-                                                <option>USER</option>
-                                                <option>ADMIN</option>
+                                            <label for="roleList" class="col-form-label">Текущие права</label>
+                                            <div class="form-control" id="roleList">
+                                            </div>
+                                            <label for="updRole">Изменить (добавить или удалить):</label>
+                                            <select class="form-control" id="updRole" size="2" th:name="updRole" multiple>
+                                                <option th:each="role : ${roles}"
+                                                        th:value="${role.id}"
+                                                        th:text="${role.name}"></option>
                                             </select>
                                         </div>
-                                        <!--                        <div class="mb-3">-->
-                                        <!--                            <label for="roles" class="col-form-label">Права:</label>-->
-                                        <!--                            <select id="roles" th:field="*{roles}" multiple>-->
-                                        <!--                                <option th:each="role : ${roles}" th:value="${role.id}" th:text="${role.name}"></option>-->
-                                        <!--                            </select>-->
-                                        <!--&lt;!&ndash;                            <label for="role" class="form-label">Права доступа:</label>&ndash;&gt;-->
-                                        <!--&lt;!&ndash;                            <select class="form-select" id="role" name="role">&ndash;&gt;-->
-                                        <!--&lt;!&ndash;                                <option th:each="role : ${roles}" th:value="${role}" th:text="${role}" th:if="${editUser.role == role}" selected></option>&ndash;&gt;-->
-                                        <!--&lt;!&ndash;                                <option th:each="role : ${roles}" th:value="${role}" th:text="${role}" th:if="${editUser.role != role}"></option>&ndash;&gt;-->
-                                        <!--&lt;!&ndash;                            </select>&ndash;&gt;-->
-                                        <!--                        </div>-->
                                         <div class="modal-footer">
                                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отменить</button>
                                             <button type="submit" class="btn btn-primary">Сохранить</button>
@@ -185,7 +180,7 @@
                         <div class="card-header">
                             <ul class="nav nav-pills card-header-pills">
                                 <li class="nav-item">
-                                    <a>Добавить нового пользователя</a>
+                                    <a>Заполните все поля</a>
                                 </li>
                             </ul>
                         </div>
@@ -207,10 +202,11 @@
                                            th:field="*{password}" required>
                                 </div>
                                 <div class="form-group">
-                                    <label for="roles">Права:</label>
-                                    <select class="form-control" id="roles">
-                                        <option>USER</option>
-                                        <option>ADMIN</option>
+                                    <label for="role">Права:</label>
+                                    <select class="form-control" id="role" size="2" th:name="roleIds" multiple required>
+                                        <option th:each="role : ${roles}"
+                                                th:value="${role.id}"
+                                                th:text="${role.name}"></option>
                                     </select>
                                 </div>
                                 <div class="modal-footer">

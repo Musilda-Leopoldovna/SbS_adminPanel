@@ -4,11 +4,8 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.ManyToMany;
 
 import org.springframework.security.core.GrantedAuthority;
-
-import java.util.Collection;
 
 @Entity
 public class Role implements GrantedAuthority {
@@ -18,12 +15,6 @@ public class Role implements GrantedAuthority {
     private Long id;
     private String name;
 
-//    @ManyToMany(mappedBy = "roles")
-//    private Collection<User> users;
-
-//    public Role() {
-//    }
-
     @Override
     public String getAuthority() {
         return name;
@@ -31,5 +22,9 @@ public class Role implements GrantedAuthority {
 
     public Long getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
     }
 }

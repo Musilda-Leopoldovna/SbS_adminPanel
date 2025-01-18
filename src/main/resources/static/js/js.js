@@ -4,12 +4,11 @@ document.addEventListener('DOMContentLoaded', () => {
     editButtons.forEach(button => {
         button.addEventListener('click', () => {
             const userId = button.getAttribute('data-id');
-            const firstName = button.getAttribute('data-firstname');
-            const email = button.getAttribute('data-email');
             document.getElementById('ID').value = userId;
-            document.getElementById('userFirstName').value = firstName;
-            document.getElementById('userEmail').value = email;
-            document.getElementById('userId').value = userId;
+            document.getElementById('userFirstName').value = button.getAttribute('data-firstname');
+            document.getElementById('userEmail').value = button.getAttribute('data-email');
+            document.getElementById('roleList').innerText = button.getAttribute('data-roles');
+            document.getElementById('userID').value = userId;
         });
     });
     // "Удалить"
@@ -17,11 +16,9 @@ document.addEventListener('DOMContentLoaded', () => {
     deleteButtons.forEach(button => {
         button.addEventListener('click', () => {
             const userId = button.getAttribute('data-id');
-            const firstName = button.getAttribute('data-firstname');
-            const email = button.getAttribute('data-email');
             document.getElementById('delID').value = userId;
-            document.getElementById('deleteFirstName').value = firstName;
-            document.getElementById('deleteEmail').value = email;
+            document.getElementById('deleteFirstName').value = button.getAttribute('data-firstname');
+            document.getElementById('deleteEmail').value = button.getAttribute('data-email');
             document.getElementById('deleteId').value = userId;
         });
     });

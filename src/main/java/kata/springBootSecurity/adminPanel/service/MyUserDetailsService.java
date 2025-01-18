@@ -1,13 +1,12 @@
-package kata.springBootSecurity.adminPanel.configs;
+package kata.springBootSecurity.adminPanel.service;
 
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.stereotype.Component;
 import kata.springBootSecurity.adminPanel.entity.User;
-import kata.springBootSecurity.adminPanel.service.UserService;
+import org.springframework.stereotype.Service;
 
-@Component
+@Service
 public class MyUserDetailsService implements UserDetailsService {
 
     private final UserService userService;

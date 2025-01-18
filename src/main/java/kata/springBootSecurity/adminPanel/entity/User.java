@@ -9,19 +9,20 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 
+import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.stream.Collectors;
 
+@DynamicUpdate
 @Entity
 public class User implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long ID;
+    private Long ID;
     private String firstName;
     private String email;
     private String username;
@@ -46,18 +47,14 @@ public class User implements UserDetails {
         this.username = firstName;
     }
 
-    public void setRoles(Collection<Role> roles) {
-        this.roles = roles;
+    public Collection<String> getRoles() {
+        return roles.stream()
+                .map(Role::getName)
+                .toList();
     }
 
-    public Collection<Role> getRoles() {
-        return roles;
-    }
-
-    public String getRole() {
-        return getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority)
-                .collect(Collectors.joining(" "));
+    public void setRoles(Role role) {
+        this.roles.add(role);
     }
 
     @Override
@@ -74,12 +71,8 @@ public class User implements UserDetails {
         return password;
     }
 
-    public long getID() {
+    public Long getID() {
         return ID;
-    }
-
-    public void setID(long ID) {
-        this.ID = ID;
     }
 
     public String getFirstName() {
