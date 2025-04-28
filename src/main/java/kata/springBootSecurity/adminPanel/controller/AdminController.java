@@ -27,7 +27,7 @@ public class AdminController {
 
     @PostMapping("/addUser")
     public String addRow(@ModelAttribute User user,
-                         @RequestParam("roleIds") Long roleIds) {
+                         @RequestParam(value = "roleIds", required = false) Long roleIds) {
         service.addNewUser(user, roleIds);
         return "redirect:/admin";
     }
@@ -35,16 +35,14 @@ public class AdminController {
     @PostMapping("/update")
     public String updateRow(@ModelAttribute User user,
                             @RequestParam(value = "updId") Long updId,
-                            @RequestParam("updRole") Long updRole){
+                            @RequestParam(value = "updRole", required = false) Long updRole){
         service.changeUser(user, updId, updRole);
         return "redirect:/admin";
     }
 
     @PostMapping("/delete")
-    public String deleteRow(@RequestParam(value = "deleteId") Long deleteId) {
-        if (deleteId != null) {
-            service.removeUserByID(deleteId);
-        }
+    public String deleteRow(@RequestParam(value = "deleteId", required = false) Long deleteId) {
+        service.removeUserByID(deleteId);
         return "redirect:/admin";
     }
 }

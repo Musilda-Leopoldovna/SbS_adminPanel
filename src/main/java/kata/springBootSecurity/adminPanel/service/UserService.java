@@ -3,7 +3,8 @@ package kata.springBootSecurity.adminPanel.service;
 import java.util.Collection;
 import java.util.List;
 
-import org.springframework.security.crypto.password.PasswordEncoder;
+import kata.springBootSecurity.adminPanel.configs.CryptConfig;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import kata.springBootSecurity.adminPanel.entity.Role;
@@ -17,12 +18,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final PasswordEncoder passwordEncoder;
+    private final CryptConfig cryptConfig;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, PasswordEncoder passwordEncoder) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, CryptConfig cryptConfig) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-        this.passwordEncoder = passwordEncoder;
+        this.cryptConfig = cryptConfig;
     }
 
     @Transactional(readOnly = true)
@@ -37,7 +38,8 @@ public class UserService {
 
     @Transactional(readOnly = true)
     public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username);
+        return userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь " + username + " не найден"));
     }
 
     public void removeUserByID(Long ID) {
@@ -48,7 +50,7 @@ public class UserService {
         user.setUsername();
         String password = user.getPassword();
         if (password != null && !password.isEmpty()) {
-            user.setPassword(passwordEncoder.encode(password));
+            user.setPassword(cryptConfig.passwordEncoder().encode(password));
         }
         Role role = roleRepository.findById(roleIds).orElseThrow(() -> new IllegalArgumentException("Роль не найдена"));
         user.setRoles(role);
@@ -60,7 +62,7 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("При попытке изменить данные пользователь не найден"));
         String newPassword = user.getPassword();
         if (newPassword != null && !newPassword.isEmpty()) {
-            updUser.setPassword(passwordEncoder.encode(newPassword));
+            updUser.setPassword(cryptConfig.passwordEncoder().encode(newPassword));
         }
         String newFirstName = user.getFirstName();
         String newEmail = user.getEmail();
@@ -70,11 +72,13 @@ public class UserService {
         if (newEmail != null && !newEmail.isEmpty()) {
             updUser.setEmail(newEmail);
         }
-        Role addRole = roleRepository.findById(updRole).orElseThrow(() -> new IllegalArgumentException("Роль не найдена"));
-        if (!updUser.getAuthorities().contains(addRole) && addRole != null) {
-            updUser.setRoles(addRole);
-        } else {
-            updUser.getAuthorities().removeIf(role -> role.equals(addRole));
+        if (updRole != null) {
+            Role addRole = roleRepository.findById(updRole).orElseThrow(() -> new IllegalArgumentException("Роль не найдена"));
+            if (!updUser.getAuthorities().contains(addRole)) {
+                updUser.setRoles(addRole);
+            } else {
+                updUser.getAuthorities().removeIf(role -> role.equals(addRole));
+            }
         }
         userRepository.save(updUser);
     }
