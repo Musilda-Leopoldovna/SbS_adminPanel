@@ -7,14 +7,16 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
-import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 
 import org.hibernate.annotations.DynamicUpdate;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.ArrayList;
 import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @DynamicUpdate
 @Entity
@@ -28,15 +30,15 @@ public class User implements UserDetails {
     private String username;
     private String password;
 
-    @ManyToMany(fetch = FetchType.EAGER)
+    @OneToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "users_id"),
             inverseJoinColumns = @JoinColumn(name = "roles_id")
     )
-    private Collection<Role> roles = new ArrayList<>();
+    private Set<Role> roles = new HashSet<>();
 
-//    public User(){}
+    protected User(){}
 
     @Override
     public String getUsername() {
@@ -47,10 +49,10 @@ public class User implements UserDetails {
         this.username = firstName;
     }
 
-    public Collection<String> getRoles() {
+    public Set<String> getRoles() {
         return roles.stream()
                 .map(Role::getName)
-                .toList();
+                .collect(Collectors.toSet());
     }
 
     public void setRoles(Role role) {

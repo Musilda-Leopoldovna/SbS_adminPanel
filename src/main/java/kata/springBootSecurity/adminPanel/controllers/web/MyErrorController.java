@@ -1,4 +1,4 @@
-package kata.springBootSecurity.adminPanel.controller;
+package kata.springBootSecurity.adminPanel.controllers.web;
 
 import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.boot.web.servlet.error.ErrorController;

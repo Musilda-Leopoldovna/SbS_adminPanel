@@ -52,6 +52,9 @@ public class UserService {
         }
         Role role = roleRepository.findById(roleIds).orElseThrow(() -> new IllegalArgumentException("Роль не найдена"));
         user.setRoles(role);
+        if (role.getName().contains("ADMIN")) {
+            user.setRoles(roleRepository.findByName("USER"));
+        }
         userRepository.save(user);
     }
 
@@ -71,7 +74,7 @@ public class UserService {
             updUser.setEmail(newEmail);
         }
         Role addRole = roleRepository.findById(updRole).orElseThrow(() -> new IllegalArgumentException("Роль не найдена"));
-        if (!updUser.getAuthorities().contains(addRole) && addRole != null) {
+        if (!updUser.getAuthorities().contains(addRole) && addRole != null && !updUser.getRoles().contains("USER")) {
             updUser.setRoles(addRole);
         } else {
             updUser.getAuthorities().removeIf(role -> role.equals(addRole));

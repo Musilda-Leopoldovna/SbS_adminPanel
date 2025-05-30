@@ -1,4 +1,4 @@
-package kata.springBootSecurity.adminPanel.controller;
+package kata.springBootSecurity.adminPanel.controllers.web;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
