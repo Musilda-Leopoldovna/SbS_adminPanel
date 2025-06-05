@@ -11,8 +11,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import jakarta.persistence.EntityNotFoundException;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @Transactional
@@ -41,35 +42,42 @@ public class UserRestService {
     }
 
     @Transactional(readOnly = true)
-    public UserDto getById(Long id) {
-        return userRepository.findById(id)
-                .map(userMapper::toDto)
-                .orElseThrow(() -> new EntityNotFoundException("Пользователь не найден"));
+    public UserDto getByUsername(String username) {
+        return userMapper.toDto(userRepository.findByUsername(username));
     }
 
-    public UserDto addNewUser(UserDto dto, Long roleId) {
-        Role role = roleRepository.findById(roleId).orElseThrow(() -> new IllegalArgumentException("Роль не найдена"));
-        User user = userMapper.toEntity(dto, role);
-//        user.setRoles(role);
-        if (role.getName().contains("ADMIN")) {
-            user.setRoles(roleRepository.findByName("USER"));
-        }
+    public Set<Role> resolveRolesFromDto(Set<String> roleNames) {
+        return roleNames.stream()
+                .map(roleRepository::findByName)
+                .collect(Collectors.toSet());
+    }
+
+    public UserDto addNewUser(UserDto dto) {
+        User user = userMapper.toEntity(dto);
+        resolveRolesFromDto(dto.roleNames()).forEach(user::setRoles);
+        user.setUsername();
         String password = dto.userPassword();
         if (password != null && !password.isEmpty()) {
             user.setPassword(passwordEncoder.encode(password));
+        } else {
+            user.setPassword("пароль по умолчанию");
         }
-        return userMapper.toDto(userRepository.save(user));
+        User newUser = userRepository.save(user);
+        return userMapper.toDto(newUser);
     }
 
-    public UserDto changeUser(UserDto dto, Long id, Long roleId) {
-        User user = userRepository.findById(id)
+    public UserDto changeUser(UserDto dto, Long id) {
+        User updUser = userRepository.findById(id)
                 .orElseThrow(() -> new IllegalArgumentException("При попытке изменить данные пользователь не найден"));
         if (dto.userPassword() != null && !dto.userPassword().isEmpty()) {
-            user.setPassword(passwordEncoder.encode(dto.userPassword()));
+            updUser.setPassword(passwordEncoder.encode(dto.userPassword()));
         }
-        user.setRoles(roleRepository.findById(roleId)
-                .orElseThrow(() -> new IllegalArgumentException("Роль не найдена")));
-        return userMapper.toDto(userRepository.save(user));
+        updUser.setFirstName(dto.userName());
+        updUser.setUsername();
+        updUser.setEmail(dto.userEmail());
+        resolveRolesFromDto(dto.roleNames()).forEach(updUser::setRoles);
+        User finalUpdUser = userRepository.save(updUser);
+        return userMapper.toDto(finalUpdUser);
     }
 
     public void delete(Long id) {

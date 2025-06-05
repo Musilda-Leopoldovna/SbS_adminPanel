@@ -12,17 +12,16 @@ public class UserMapper {
                 user.getFirstName(),
                 user.getEmail(),
                 user.getUsername(),
-                null, // не возвращать пароль
+                null,
                 user.getRoles()
         );
     }
 
-    public User toEntity(UserDto dto, Role roleEntities) {
+    public User toEntity(UserDto dto) {
         User user = new User();
-        user.setEmail(dto.userEmail());
         user.setFirstName(dto.userName());
+        user.setEmail(dto.userEmail());
         user.setPassword(dto.userPassword());
-        user.setRoles(roleEntities);
         return user;
     }
 }

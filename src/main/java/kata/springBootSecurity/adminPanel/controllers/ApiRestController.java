@@ -4,22 +4,21 @@ package kata.springBootSecurity.adminPanel.controllers;
 import kata.springBootSecurity.adminPanel.dto.UserDto;
 import kata.springBootSecurity.adminPanel.service.UserRestService;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import jakarta.validation.Valid;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/users")
 public class ApiRestController {
 
     private final UserRestService apiService;
@@ -28,34 +27,27 @@ public class ApiRestController {
         this.apiService = service;
     }
 
-    @GetMapping("/{id}")
-    public UserDto getUserById(@PathVariable Long id) {
-        return apiService.getById(id);
-    }
-
-    @GetMapping("/users")
+    @GetMapping
     public List<UserDto> getAllUsers() {
         return apiService.getAll();
     }
 
     @PostMapping
-    public ResponseEntity<UserDto> createUser(@Valid @RequestBody UserDto userDto,
-                                              @RequestParam(name = "roleId") Long roleId) {
-        return ResponseEntity.ok(apiService.addNewUser(userDto, roleId));
+    public ResponseEntity<UserDto> createUser(@RequestBody @Valid UserDto userDto) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(apiService.addNewUser(userDto));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<UserDto> updateUser(@PathVariable Long id,
-                                              @Valid @RequestBody UserDto userDto,
-                                              @RequestParam(name = "updRole") Long updRole) {
-        return ResponseEntity.ok(apiService.changeUser(userDto, id, updRole));
+    @PutMapping
+    public ResponseEntity<UserDto> updateUser(@RequestBody @Valid UserDto userDto) {
+        return ResponseEntity.ok(apiService.changeUser(userDto, userDto.ID()));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteUser(@PathVariable Long id) {
+    @DeleteMapping
+    public ResponseEntity<String> deleteUser(@RequestBody @Valid UserDto userDto) {
+        Long id = userDto.ID();
         if (id != null) {
             apiService.delete(id);
         }
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok("Пользователь ID=" + id + " удалён из базы данных.");
     }
 }
