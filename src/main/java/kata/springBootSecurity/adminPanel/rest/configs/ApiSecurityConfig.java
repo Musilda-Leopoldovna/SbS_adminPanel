@@ -26,10 +26,10 @@ public class ApiSecurityConfig {
                 .httpBasic(baseAuth -> baseAuth
                         .authenticationEntryPoint(new RestAuthenticationEntryPoint()))
                 .exceptionHandling(ex -> ex
-                        .accessDeniedHandler(new RestAccessDeniedHandler()))
-                .sessionManagement(session -> session
-                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                );
+                        .accessDeniedHandler(new RestAccessDeniedHandler()));
+//                .sessionManagement(session -> session
+//                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+//                );
         return http.build();
     }
 }
