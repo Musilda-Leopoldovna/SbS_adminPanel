@@ -1,5 +1,6 @@
 package kata.springBootSecurity.adminPanel.mvc.configs;
 
+import kata.springBootSecurity.adminPanel.exceptionsHandlers.RestAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -29,6 +30,8 @@ public class WebSecurityConfig {
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .successHandler(successUserHandler))
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(new RestAuthenticationEntryPoint()))
                 .logout(logout -> logout
                         .logoutSuccessUrl("/login")
                         .invalidateHttpSession(true)

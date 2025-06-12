@@ -19,7 +19,7 @@ public class UserRestController {
     }
 
     @GetMapping
-    public UserDto getUser(Principal principal) {
+    public UserDto getCurrentUser(Principal principal) {
         return apiService.getByUsername(principal.getName());
     }
 }

@@ -1,10 +1,10 @@
 package kata.springBootSecurity.adminPanel.rest.configs;
 
+import kata.springBootSecurity.adminPanel.exceptionsHandlers.RestAccessDeniedHandler;
+import kata.springBootSecurity.adminPanel.exceptionsHandlers.RestAuthenticationEntryPoint;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -23,29 +23,10 @@ public class ApiSecurityConfig {
                         .requestMatchers("/api/users/**").hasAuthority("ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api").hasAnyAuthority("USER", "ADMIN")
                         .anyRequest().authenticated())
-                .httpBasic(customizer -> customizer
-                        .authenticationEntryPoint((request, response, authException) -> {
-                            response.setStatus(HttpStatus.UNAUTHORIZED.value());
-                            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                            response.getWriter().write("""
-                    {
-                        "error": "Unauthorized",
-                        "message": "Неверный логин или пароль"
-                    }
-                    """);
-                        }))
+                .httpBasic(baseAuth -> baseAuth
+                        .authenticationEntryPoint(new RestAuthenticationEntryPoint()))
                 .exceptionHandling(ex -> ex
-                        .accessDeniedHandler((request, response, accessDeniedException) -> {
-                            response.setStatus(HttpStatus.FORBIDDEN.value());
-                            response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-                            response.getWriter().write("""
-                                                        {
-                                                            "error": "Forbidden",
-                                                            "message": "Нет прав доступа к этому ресурсу"
-                                                        }
-                                                        """);
-                        })
-                )
+                        .accessDeniedHandler(new RestAccessDeniedHandler()))
                 .sessionManagement(session -> session
                         .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 );
