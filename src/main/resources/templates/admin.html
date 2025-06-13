@@ -16,11 +16,8 @@
     <header class="top_navbar">
         <div class="welcome">
             <p>
-                Пользователь - <span th:text="${#authentication.name}"></span>
-                с правами:
-                <span th:each="auth : ${#authentication.authorities}">
-                    <span th:text="${auth.getAuthority()}"></span>
-                </span>
+                Пользователь - <span id="username"></span>
+                с правами: <span id="roles"></span>
             </p>
         </div>
         <form th:action="@{/logout}" method="post">
@@ -30,17 +27,7 @@
 
     <div class="general_view">
         <div class="d-flex flex-column flex-shrink-0 p-3" style="width: 280px;">
-            <ul class="nav nav-pills flex-column mb-auto">
-                <li class="nav-item">
-                    <a th:href="@{/admin}" class="nav-link active" aria-current="page">
-                        Администратор
-                    </a>
-                </li>
-                <li>
-                    <a th:href="@{/user}" class="nav-link">
-                        Текущий пользователь
-                    </a>
-                </li>
+            <ul class="nav nav-pills flex-column mb-auto" id="nav-links">
             </ul>
         </div>
 
@@ -69,27 +56,7 @@
                             <th title="Права доступа">roles</th>
                             <th>updating</th>
                         </tr>
-                        <tbody>
-                        <tr th:each="user : ${userList}" th:object="${user}">
-                            <td th:text="*{ID}"></td>
-                            <td th:text="*{firstName}"></td>
-                            <td th:text="*{email}"></td>
-                            <td th:text="${#lists.isEmpty(user.roles)} ? 'Права не назначены'
-                                                                       : ${#strings.listJoin(user.roles, ' ')}">
-
-                            </td>
-                            <td>
-                                <div class="button-group" th:object="${user}">
-                                    <button type="button" class="update_button" data-bs-toggle="modal"
-                                            th:data-id="*{ID}"  th:data-firstname="*{firstName}" th:data-email="*{email}"
-                                            th:data-roles="*{#strings.listJoin(roles, ' ')}"
-                                            data-bs-target="#editForm" title="редактировать">upd</button>
-                                    <button type="button" class="delete_button" data-bs-toggle="modal"
-                                            th:data-id="*{ID}" th:data-firstname="*{firstName}" th:data-email="*{email}"
-                                            data-bs-target="#deleteForm" title="удалить">del</button>
-                                </div>
-                            </td>
-                        </tr>
+                        <tbody id="users-data">
                         </tbody>
                     </table>
 
@@ -143,7 +110,6 @@
                             </div>
                         </div>
                     </div>
-
                     <div class="modal fade" id="deleteForm" tabindex="-1" aria-labelledby="deleteFormLabel" aria-hidden="true">
                         <div class="modal-dialog">
                             <div class="modal-content">
@@ -153,29 +119,28 @@
                                 </div>
                                 <div class="modal-body">
                                     <p>Вы уверены, что хотите удалить этого пользователя?</p>
-                                    <form th:action="@{/delete}" method="post">
-                                        <input type="hidden" id="deleteId" name="deleteId" />
-                                        <div class="mb-3">
-                                            <label for="delID" class="col-form-label">ID</label>
-                                            <input type="text" class="form-control" id="delID" readonly>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="deleteFirstName" class="col-form-label">Имя</label>
-                                            <input type="text" class="form-control" id="deleteFirstName" readonly>
-                                        </div>
-                                        <div class="mb-3">
-                                            <label for="deleteEmail" class="col-form-label">Почта</label>
-                                            <input type="text" class="form-control" id="deleteEmail" readonly>
-                                        </div>
-                                        <div class="modal-footer">
-                                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
-                                            <button type="submit" class="btn btn-danger">Удалить</button>
-                                        </div>
-                                    </form>
+                                    <input type="hidden" id="deleteId" />
+                                    <div class="mb-3">
+                                        <label for="delID" class="col-form-label">ID</label>
+                                        <input type="text" class="form-control" id="delID" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="deleteFirstName" class="col-form-label">Имя</label>
+                                        <input type="text" class="form-control" id="deleteFirstName" readonly>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="deleteEmail" class="col-form-label">Почта</label>
+                                        <input type="text" class="form-control" id="deleteEmail" readonly>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Отмена</button>
+                                    <button type="button" class="btn btn-danger" id="confirmDeleteBtn">Удалить</button>
                                 </div>
                             </div>
                         </div>
                     </div>
+                </div>
                 </div>
                 <div class="tab-pane fade" id="users-tab-pane" role="tabpanel" aria-labelledby="users-tab" tabindex="0">
                     <div class="modal-content">
@@ -187,33 +152,34 @@
                             </ul>
                         </div>
                         <div class="modal-body">
-                            <form th:action="@{/addUser}" method="post" th:object="${user}">
-                                <div class="mb-3">
-                                    <label for="firstName" class="col-form-label">Имя</label>
-                                    <input type="text" maxlength="20" class="form-control" id="firstName"
-                                           th:field="*{firstName}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="email" class="col-form-label">Адрес</label>
-                                    <input type="text" maxlength="40" class="form-control" id="email"
-                                           th:field="*{email}" required>
-                                </div>
-                                <div class="mb-3">
-                                    <label for="password" class="col-form-label">Пароль:</label>
-                                    <input type="password" minlength="8" maxlength="25" id="password"
-                                           th:field="*{password}" required>
-                                </div>
-                                <div class="form-group">
-                                    <label for="role">Права:</label>
-                                    <select class="form-control" id="role" size="2" th:name="roleIds" multiple required>
-                                        <option th:each="role : ${roles}"
-                                                th:value="${role.id}"
-                                                th:text="${role.name}"></option>
-                                    </select>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="add_button">Сохранить</button>
-                                </div>
+                            <form id="userForm">
+<!--                            <form th:action="@{/addUser}" method="post" th:object="${user}">-->
+<!--                                <div class="mb-3">-->
+<!--                                    <label for="firstName" class="col-form-label">Имя</label>-->
+<!--                                    <input type="text" maxlength="20" class="form-control" id="firstName"-->
+<!--                                           th:field="*{firstName}" required>-->
+<!--                                </div>-->
+<!--                                <div class="mb-3">-->
+<!--                                    <label for="email" class="col-form-label">Адрес</label>-->
+<!--                                    <input type="text" maxlength="40" class="form-control" id="email"-->
+<!--                                           th:field="*{email}" required>-->
+<!--                                </div>-->
+<!--                                <div class="mb-3">-->
+<!--                                    <label for="password" class="col-form-label">Пароль:</label>-->
+<!--                                    <input type="password" minlength="8" maxlength="25" id="password"-->
+<!--                                           th:field="*{password}" required>-->
+<!--                                </div>-->
+<!--                                <div class="form-group">-->
+<!--                                    <label for="role">Права:</label>-->
+<!--                                    <select class="form-control" id="role" size="2" th:name="roleIds" multiple required>-->
+<!--                                        <option th:each="role : ${roles}"-->
+<!--                                                th:value="${role.id}"-->
+<!--                                                th:text="${role.name}"></option>-->
+<!--                                    </select>-->
+<!--                                </div>-->
+<!--                                <div class="modal-footer">-->
+<!--                                    <button type="submit" class="add_button">Сохранить</button>-->
+<!--                                </div>-->
                             </form>
                         </div>
                     </div>

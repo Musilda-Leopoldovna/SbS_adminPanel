@@ -66,7 +66,10 @@ public class UserRestService {
             user.setPassword(passwordEncoder.encode(password));
         }
         // roles set
-        getRolesFromDto(dto.roleNames()).forEach(user::setRoles);
+        if (dto.roleNames() != null) {
+            getRolesFromDto(dto.roleNames()).forEach(user::setRoles);
+        }
+
         userRepository.save(user);
         return userToDtoMapper.toDto(user);
     }
