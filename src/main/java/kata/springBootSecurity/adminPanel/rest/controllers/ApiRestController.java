@@ -1,6 +1,5 @@
 package kata.springBootSecurity.adminPanel.rest.controllers;
 
-
 import kata.springBootSecurity.adminPanel.rest.dto.NewUserDto;
 import kata.springBootSecurity.adminPanel.rest.dto.UpdUserDto;
 import kata.springBootSecurity.adminPanel.rest.dto.UserDto;

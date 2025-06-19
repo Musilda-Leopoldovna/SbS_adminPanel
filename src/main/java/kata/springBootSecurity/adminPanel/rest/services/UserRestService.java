@@ -54,6 +54,12 @@ public class UserRestService {
         return userToDtoMapper.toDto(userRepository.findByUsername(username));
     }
 
+    public List<String> getAllRoles() {
+        return roleRepository.findAll()
+                .stream().map(Role::getName)
+                .collect(Collectors.toList());
+    }
+
     public UserDto addNewUser(NewUserDto dto) {
 
         User user = new User();

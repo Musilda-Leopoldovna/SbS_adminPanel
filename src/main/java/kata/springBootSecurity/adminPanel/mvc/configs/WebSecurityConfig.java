@@ -30,7 +30,6 @@ public class WebSecurityConfig {
                         .loginPage("/login")
                         .successHandler(successUserHandler))
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/login")
                         .invalidateHttpSession(true)
                         .deleteCookies("JSESSIONID"));
         return http.build();

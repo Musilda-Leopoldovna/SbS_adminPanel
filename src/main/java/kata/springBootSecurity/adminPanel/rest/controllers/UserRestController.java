@@ -1,6 +1,5 @@
 package kata.springBootSecurity.adminPanel.rest.controllers;
 
-import jakarta.servlet.http.HttpSession;
 import kata.springBootSecurity.adminPanel.rest.dto.UserDto;
 import kata.springBootSecurity.adminPanel.rest.services.UserRestService;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,9 +19,7 @@ public class UserRestController {
     }
 
     @GetMapping
-    public UserDto getCurrentUser(Principal principal, HttpSession session) {
-        System.out.println("SESSION ID: " + session.getId());
-        System.out.println("Principal: " + principal);
+    public UserDto getCurrentUser(Principal principal) {
         return apiService.getByUsername(principal.getName());
     }
 }

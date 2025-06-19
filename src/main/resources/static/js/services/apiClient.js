@@ -18,16 +18,6 @@ export async function getAllUsers() {
     });
     return res.json();
 }
-// Получение списка ролей для добавления или редактирования пользователя
-export async function loadRoles() {
-    const response = await fetch(API.ROLES, {
-        method: 'GET',
-        headers: {
-            'Accept': 'application/json'
-        }
-    });
-    return response.json();
-}
 // Удаление пользователя
 export async function deleteUser(userDto) {
     return await fetch(API.USERS, {
@@ -55,7 +45,7 @@ export async function editUser(userDto) {
 // Добавление нового пользователя
 export async function addUser(userDto) {
     return await fetch(API.USERS, {
-        method: 'PUT',
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json',
             'Accept': 'application/json'
