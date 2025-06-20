@@ -1,9 +1,11 @@
 package kata.springBootSecurity.adminPanel.mvc.services;
+// Не работает с rest
 
 import java.util.Collection;
 import java.util.List;
 
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import kata.springBootSecurity.adminPanel.database.entity.Role;
@@ -15,6 +17,8 @@ import kata.springBootSecurity.adminPanel.additionalConfigs.UsedPasswordEncoder;
 @Service
 @Transactional
 public class UserService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserService.class);
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -34,12 +38,6 @@ public class UserService {
     @Transactional(readOnly = true)
     public Collection<Role> getListOfRoles() {
         return roleRepository.findAll();
-    }
-
-    @Transactional(readOnly = true)
-    public User getUserByUsername(String username) {
-        return userRepository.findByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException("Пользователь " + username + " не найден"));
     }
 
     public void removeUserByID(Long ID) {

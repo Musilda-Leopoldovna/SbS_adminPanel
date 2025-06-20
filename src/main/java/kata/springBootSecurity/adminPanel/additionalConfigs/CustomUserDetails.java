@@ -1,6 +1,6 @@
 package kata.springBootSecurity.adminPanel.additionalConfigs;
 
-import kata.springBootSecurity.adminPanel.mvc.services.UserService;
+import kata.springBootSecurity.adminPanel.database.repository.UserRepository;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,14 +9,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomUserDetails implements UserDetailsService {
 
-    private final UserService userService;
+    private final UserRepository user;
 
-    public CustomUserDetails(UserService userService) {
-        this.userService = userService;
+    public CustomUserDetails(UserRepository userRepository) {
+        this.user = userRepository;
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return userService.getUserByUsername(username);
+        return user.findByUsername(username).orElseThrow(() -> new UsernameNotFoundException(username));
     }
 }

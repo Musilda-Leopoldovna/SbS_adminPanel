@@ -21,5 +21,8 @@ public class UserRestController {
     @GetMapping
     public UserDto getCurrentUser(Principal principal) {
         return apiService.getByUsername(principal.getName());
+//        // вариант для работы при сложных конфигурациях прокси и фильтров (?) изучить вариант
+//        Authentication currentAuthUser = SecurityContextHolder.getContext().getAuthentication();;
+//        return apiService.getByUsername(currentAuthUser.getName());
     }
 }

@@ -12,10 +12,15 @@
     <div class="back">
         <h2>ОЙ! Какая жаль!</h2>
         <img th:src="@{/images/ping.jpg}" th:alt="Oops">
-        <p>Мискузи, сыр, такой страницы у нас нет.
-            <br />
-            Но Вы можете вернуться к себе на страницу.
-        </p>
+        <div>
+            <p>
+                Такие вот дела: адрес - <span th:text="${uri}"></span>
+                <br />
+                не доступен для просмотра по причине ошибки <span th:text="${status}"></span>.
+                <br />
+                Но Вы можете вернуться к себе на страницу.
+            </p>
+        </div>
         <form th:action="@{/user}" method="get">
             <button type="submit">Пожалуй, да</button>
         </form>
