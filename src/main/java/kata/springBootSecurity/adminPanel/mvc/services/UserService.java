@@ -3,7 +3,6 @@ package kata.springBootSecurity.adminPanel.mvc.services;
 import java.util.Collection;
 import java.util.List;
 
-import kata.springBootSecurity.adminPanel.configs.CryptConfig;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -11,6 +10,7 @@ import kata.springBootSecurity.adminPanel.database.entity.Role;
 import kata.springBootSecurity.adminPanel.database.repository.RoleRepository;
 import kata.springBootSecurity.adminPanel.database.entity.User;
 import kata.springBootSecurity.adminPanel.database.repository.UserRepository;
+import kata.springBootSecurity.adminPanel.additionalConfigs.UsedPasswordEncoder;
 
 @Service
 @Transactional
@@ -18,12 +18,12 @@ public class UserService {
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
-    private final CryptConfig cryptConfig;
+    private final UsedPasswordEncoder usedPasswordEncoder;
 
-    public UserService(UserRepository userRepository, RoleRepository roleRepository, CryptConfig cryptConfig) {
+    public UserService(UserRepository userRepository, RoleRepository roleRepository, UsedPasswordEncoder usedPasswordEncoder) {
         this.userRepository = userRepository;
         this.roleRepository = roleRepository;
-        this.cryptConfig = cryptConfig;
+        this.usedPasswordEncoder = usedPasswordEncoder;
     }
 
     @Transactional(readOnly = true)
@@ -50,13 +50,13 @@ public class UserService {
         user.setUsername(user.getFirstName());
         String password = user.getPassword();
         if (password != null && !password.isEmpty()) {
-            user.setPassword(cryptConfig.passwordEncoder().encode(password));
+            user.setPassword(usedPasswordEncoder.passwordEncoder().encode(password));
         }
         Role role = roleRepository.findById(roleIds).orElseThrow(() -> new IllegalArgumentException("Роль не найдена"));
         user.setRoles(role);
-        if (role.getName().contains("ADMIN")) {
-            user.setRoles(roleRepository.findByName("USER"));
-        }
+//        if (role.getName().contains("ADMIN")) {
+////            user.setRoles(roleRepository.findByName("USER"));
+//        }
         userRepository.save(user);
     }
 
@@ -65,7 +65,7 @@ public class UserService {
                 .orElseThrow(() -> new IllegalArgumentException("При попытке изменить данные пользователь не найден"));
         String newPassword = user.getPassword();
         if (newPassword != null && !newPassword.isEmpty()) {
-            updUser.setPassword(cryptConfig.passwordEncoder().encode(newPassword));
+            updUser.setPassword(usedPasswordEncoder.passwordEncoder().encode(newPassword));
         }
         String newFirstName = user.getFirstName();
         if (newFirstName != null && !newFirstName.isEmpty()) {
@@ -77,17 +77,14 @@ public class UserService {
         }
         if (updRole != null) {
             Role addRole = roleRepository.findById(updRole).orElseThrow(() -> new IllegalArgumentException("Роль не найдена"));
-<<<<<<< HEAD:src/main/java/kata/springBootSecurity/adminPanel/service/UserService.java
-            if (!updUser.getAuthorities().contains(addRole)) {
-                updUser.setRoles(addRole);
-            } else {
-=======
-            if (!updUser.getRoles().contains("USER")) {
-                updUser.setRoles(addRole);
-            }else {
->>>>>>> rest_controllers:src/main/java/kata/springBootSecurity/adminPanel/mvc/services/UserService.java
-                updUser.getAuthorities().removeIf(role -> role.equals(addRole));
+            if (updUser.getAuthorities().contains(addRole)) {
+                if (!updUser.getRoles().contains("USER")) {
+                    updUser.setRoles(addRole);
+                } else {
+                    updUser.getAuthorities().removeIf(role -> role.equals(addRole));
+                }
             }
+            updUser.setRoles(addRole);
         }
     }
 }

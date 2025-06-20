@@ -64,29 +64,7 @@
                             <th title="Права доступа">roles</th>
                             <th>updating</th>
                         </tr>
-<<<<<<< HEAD
-                        <tbody>
-                        <tr th:each="user : ${userList}" th:object="${user}">
-                            <td th:text="*{ID}"></td>
-                            <td th:text="*{firstName}"></td>
-                            <td th:text="*{email}"></td>
-                            <td th:text="*{#lists.isEmpty(roles) ? 'Права пользователя отсутствуют' : #strings.listJoin(roles, ' ')}">
-                            </td>
-                            <td>
-                                <div class="button-group" th:object="${user}">
-                                    <button type="button" class="update_button" data-bs-toggle="modal"
-                                            th:data-id="*{ID}"  th:data-firstname="*{firstName}" th:data-email="*{email}"
-                                            th:data-roles="*{#strings.listJoin(roles, ' ')}"
-                                            data-bs-target="#editForm" title="редактировать">upd</button>
-                                    <button type="button" class="delete_button" data-bs-toggle="modal"
-                                            th:data-id="*{ID}" th:data-firstname="*{firstName}" th:data-email="*{email}"
-                                            data-bs-target="#deleteForm" title="удалить">del</button>
-                                </div>
-                            </td>
-                        </tr>
-=======
                         <tbody id="users-data">
->>>>>>> rest_controllers
                         </tbody>
                     </table>
 
@@ -180,16 +158,10 @@
                         <div class="modal-body">
                             <form id="userForm" method="post">
                                 <div class="mb-3">
-<<<<<<< HEAD
-                                    <label for="firstName" class="col-form-label">Имя</label>
-                                    <input type="text" maxlength="20" class="form-control" id="firstName"
-                                           placeholder="Выбранное имя = логин при авторизации (не меняется впоследствии)"
-                                           th:field="*{firstName}" required>
-=======
                                     <label for="addFirstName" class="col-form-label">Имя</label>
                                     <input type="text" maxlength="20" class="form-control" id="addFirstName"
+                                           placeholder="Выбранное имя = логин при авторизации (не меняется впоследствии)"
                                            name="userName" required>
->>>>>>> rest_controllers
                                 </div>
                                 <div class="mb-3">
                                     <label for="addEmail" class="col-form-label">Адрес</label>

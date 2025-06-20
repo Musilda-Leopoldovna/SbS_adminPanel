@@ -16,10 +16,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
-<<<<<<< HEAD:src/main/java/kata/springBootSecurity/adminPanel/entity/User.java
-=======
 import java.util.stream.Collectors;
->>>>>>> rest_controllers:src/main/java/kata/springBootSecurity/adminPanel/database/entity/User.java
 
 //@DynamicUpdate
 @Entity
@@ -41,11 +38,7 @@ public class User implements UserDetails {
     )
     private Set<Role> roles = new HashSet<>();
 
-<<<<<<< HEAD:src/main/java/kata/springBootSecurity/adminPanel/entity/User.java
-    protected User(){}
-=======
     public User(){}
->>>>>>> rest_controllers:src/main/java/kata/springBootSecurity/adminPanel/database/entity/User.java
 
     @Override
     public String getUsername() {

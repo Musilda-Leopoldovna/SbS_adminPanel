@@ -1,3 +1,5 @@
+// Запросы к API
+
 import { API } from "../config/apiEndpoints.js";
 
 // Получение данных текущего пользователя

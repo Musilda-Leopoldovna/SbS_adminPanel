@@ -9,6 +9,9 @@ import kata.springBootSecurity.adminPanel.rest.dto.UserDto;
 import kata.springBootSecurity.adminPanel.database.repository.UserRepository;
 import kata.springBootSecurity.adminPanel.database.repository.RoleRepository;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -20,6 +23,8 @@ import java.util.stream.Collectors;
 @Service
 @Transactional
 public class UserRestService {
+
+    private static final Logger logger = LoggerFactory.getLogger(UserRestService.class);
 
     private final UserRepository userRepository;
     private final RoleRepository roleRepository;
@@ -38,7 +43,8 @@ public class UserRestService {
 
     private Set<Role> getRolesFromDto(Set<String> roleNames) {
         return roleNames.stream()
-                .map(roleRepository::findByName)
+                .map(role -> roleRepository.findByName(role)
+                        .orElseThrow(() -> new IllegalArgumentException("Роль не найдена")))
                 .collect(Collectors.toSet());
     }
 
@@ -51,13 +57,8 @@ public class UserRestService {
 
     @Transactional(readOnly = true)
     public UserDto getByUsername(String username) {
-        return userToDtoMapper.toDto(userRepository.findByUsername(username));
-    }
-
-    public List<String> getAllRoles() {
-        return roleRepository.findAll()
-                .stream().map(Role::getName)
-                .collect(Collectors.toList());
+        return userToDtoMapper.toDto(userRepository.findByUsername(username)
+                .orElseThrow(() -> new UsernameNotFoundException("Пользователь " + username + " не найден")));
     }
 
     public UserDto addNewUser(NewUserDto dto) {
@@ -94,16 +95,28 @@ public class UserRestService {
         if (email != null && !email.isEmpty()) {
             updUser.setEmail(email);
         }
-
+        // login-password
         String password = dto.userPassword();
         if (password != null && !password.isEmpty()) {
             updUser.setPassword(passwordEncoder.encode(password));
         }
-
+        // roles
         Set<String> roleNames = dto.roleNames();
-        if (roleNames != null) {
-            getRolesFromDto(roleNames).forEach(updUser::setRoles);
+        if (roleNames != null && !roleNames.isEmpty()) {
+            Set<Role> newRoles = getRolesFromDto(roleNames);
+            for (Role newRole : newRoles) {
+                if (!updUser.getAuthorities().contains(newRole)) {
+                    updUser.setRoles(newRole);
+                    logger.info("Пользователю \"{}\" назначена роль {}. Текущие роли {}.",
+                            firstName, roleNames, updUser.getRoles());
+                } else {
+                    updUser.getAuthorities().removeIf(role -> role.equals(newRole));
+                    logger.info("У пользователя \"{}\" удалена роль {}. Текущие роли {}.",
+                            firstName, roleNames, updUser.getRoles());
+                }
+            }
         }
+
         return userToDtoMapper.toDto(updUser);
     }
 
