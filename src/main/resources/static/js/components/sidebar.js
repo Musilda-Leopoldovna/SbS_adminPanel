@@ -12,7 +12,8 @@ export function renderSidebar(user, currentPath) {
     navLinks.innerHTML = '';
 
     routesByRole.forEach(({ path, label, role }) => {
-        if (user.roleNames.includes(role)) {
+        const hasAccess = user.roleNames.includes(role) || (role === 'USER' && user.roleNames.includes('ADMIN'));
+        if (hasAccess) {
             const isActive = currentPath === path ? 'active' : '';
             navLinks.innerHTML += `
                 <li class="nav-item">

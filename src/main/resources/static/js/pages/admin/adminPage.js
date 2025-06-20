@@ -42,7 +42,7 @@ export async function initAdminPage(user) {
         const editBtn = userRow.querySelector('.update_button');
         const deleteBtn = userRow.querySelector('.delete_button');
 
-        bindEditModal(editBtn, u);
+        bindEditModal(editBtn);
         bindDeleteModal(deleteBtn, u);
     });
     bindDeleteConfirmButton();

@@ -35,9 +35,6 @@ export async function editCurrentUser() {
             const updatedUser = await response.json();
             updateRowById(updatedUser);
             closeModal('editForm');
-        } else {
-            const errorText = await response.text();
-            alert(`Ошибка редактирования: ${errorText}`);
         }
     } catch (error) {
         console.error('Ошибка при редактировании:', error);
