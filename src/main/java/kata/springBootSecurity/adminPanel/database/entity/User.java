@@ -30,7 +30,9 @@ public class User implements UserDetails {
     private String username;
     private String password;
 
+    // EAGER нужен для корректной аутентификации, т.к. при вызове getAuthorities() Spring Security ожидает получить роли уже загруженными.
     @OneToMany(fetch = FetchType.EAGER)
+    // никаких каскадных операций с ролями, т.к. таблица ролей - неизменяемый справочник
     @JoinTable(
             name = "user_roles",
             joinColumns = @JoinColumn(name = "users_id"),

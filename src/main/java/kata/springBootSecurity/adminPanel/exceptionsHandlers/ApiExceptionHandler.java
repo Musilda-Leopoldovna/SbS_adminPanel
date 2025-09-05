@@ -2,6 +2,8 @@ package kata.springBootSecurity.adminPanel.exceptionsHandlers;
 
 import jakarta.servlet.http.HttpServletRequest;
 import kata.springBootSecurity.adminPanel.rest.controllers.ApiRestController;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -18,6 +20,18 @@ import java.util.Map;
 
 @RestControllerAdvice(assignableTypes = ApiRestController.class)
 public class ApiExceptionHandler {
+
+    private static final Logger logger = LoggerFactory.getLogger(ApiExceptionHandler.class);
+
+    @ExceptionHandler(ResourceNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleNotFound(ResourceNotFoundException ex, HttpServletRequest request) {
+        logger.error("Ресурс не найден: {} — {}", request.getRequestURI(), ex.getMessage());
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body(Map.of(
+                "error", "Not Found",
+                "message", ex.getMessage(),
+                "path", request.getRequestURI()
+        ));
+    }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Map<String, Object>> handleJsonParseError(HttpServletRequest request, Exception ex) {

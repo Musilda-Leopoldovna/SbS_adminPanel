@@ -26,6 +26,7 @@ public class ApiSecurityConfig {
                         .authenticationEntryPoint(new RestAuthenticationEntryPoint()))
                 .exceptionHandling(ex -> ex
                         .accessDeniedHandler(new RestAccessDeniedHandler()));
+                // только для REST API (не для гибридного доступа)
 //                .sessionManagement(session -> session
 //                        .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
 //                );
